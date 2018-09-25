@@ -12,7 +12,7 @@ open class RNNotificationView: UIToolbar {
     // MARK: - Properties
     
     open static var sharedNotification = RNNotificationView()
-
+    
     open var titleFont = Notification.titleFont {
         didSet {
             titleLabel.font = titleFont
@@ -47,14 +47,14 @@ open class RNNotificationView: UIToolbar {
     }
     
     fileprivate var tapAction: (() -> ())?
-
-   
+    
+    
     /// Views
     
     fileprivate lazy var imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.layer.cornerRadius = 3
-        imageView.contentMode = UIViewContentMode.scaleAspectFill
+        imageView.contentMode = UIView.ContentMode.scaleAspectFill
         imageView.clipsToBounds = true
         return imageView
     }()
@@ -105,7 +105,7 @@ open class RNNotificationView: UIToolbar {
                       height: NotificationLayout.dragViewHeight)
     }
     
-
+    
     fileprivate var textPointX: CGFloat {
         return  NotificationLayout.imageBorder + self.iconSize.width + NotificationLayout.textBorder
     }
@@ -130,8 +130,8 @@ open class RNNotificationView: UIToolbar {
     }
     
     private var previousStatusBarStyle: UIStatusBarStyle?
-
-   
+    
+    
     // MARK: - Initialization
     
     deinit {
@@ -158,7 +158,7 @@ open class RNNotificationView: UIToolbar {
     }
     
     open override var intrinsicContentSize : CGSize {
-        return CGSize(width: UIViewNoIntrinsicMetric, height: NotificationLayout.height)
+        return CGSize(width: UIView.noIntrinsicMetric, height: NotificationLayout.height)
     }
     
     
@@ -171,7 +171,7 @@ open class RNNotificationView: UIToolbar {
         }
         
         /// Add Orientation notification
-        NotificationCenter.default.addObserver(self, selector: #selector(RNNotificationView.orientationStatusDidChange(_:)), name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(RNNotificationView.orientationStatusDidChange(_:)), name: UIDevice.orientationDidChangeNotification, object: nil)
         
     }
     
@@ -196,10 +196,10 @@ open class RNNotificationView: UIToolbar {
         self.imageView.frame = self.imageViewFrame
         self.subtitleLabel.frame = self.messageLabelFrame
         self.dragView.frame = self.dragViewFrame
-
+        
         fixLabelMessageSize()
     }
-
+    
     fileprivate func setupUI() {
         
         translatesAutoresizingMaskIntoConstraints = false
@@ -217,7 +217,7 @@ open class RNNotificationView: UIToolbar {
         self.isExclusiveTouch = true
         
         self.frame = CGRect(x: 0, y: 0, width: NotificationLayout.width, height: NotificationLayout.height)
-        self.autoresizingMask = [UIViewAutoresizing.flexibleWidth, UIViewAutoresizing.flexibleTopMargin, UIViewAutoresizing.flexibleRightMargin, UIViewAutoresizing.flexibleLeftMargin]
+        self.autoresizingMask = [UIView.AutoresizingMask.flexibleWidth, UIView.AutoresizingMask.flexibleTopMargin, UIView.AutoresizingMask.flexibleRightMargin, UIView.AutoresizingMask.flexibleLeftMargin]
         
         // Add subviews
         self.addSubview(self.titleLabel)
@@ -261,7 +261,7 @@ open class RNNotificationView: UIToolbar {
         self.tapAction?()
         self.hide(completion: nil)
     }
-
+    
     @objc fileprivate func didPan(_ gesture: UIPanGestureRecognizer) {
         
         switch gesture.state {
@@ -275,7 +275,7 @@ open class RNNotificationView: UIToolbar {
         case .began:
             self.isDragging = true
             break
-
+            
         case .changed:
             
             guard let superview = self.superview else {
@@ -296,9 +296,9 @@ open class RNNotificationView: UIToolbar {
                 gestureView.center = newCenter
                 gesture.setTranslation(CGPoint.zero, in: superview)
             }
-
+            
             break
-
+            
         default:
             break
         }
@@ -346,20 +346,20 @@ public extension RNNotificationView {
             UIApplication.shared.delegate?.window??.safeAreaInsets.top, top > 0 {
             // iPhone X
             self.previousStatusBarStyle = UIApplication.shared.statusBarStyle
-            window?.windowLevel = UIWindowLevelNormal
+            window?.windowLevel = UIWindow.Level.normal
             window?.rootViewController?.setStatusBarStyle(style: .lightContent)
         } else {
-            window?.windowLevel = UIWindowLevelStatusBar
+            window?.windowLevel = UIWindow.Level.statusBar
         }
         window?.addSubview(self)
         
         /// Show animation
-        UIView.animate(withDuration: Notification.animationDuration, delay: 0, options: UIViewAnimationOptions.curveEaseOut, animations: {
-
+        UIView.animate(withDuration: Notification.animationDuration, delay: 0, options: UIView.AnimationOptions.curveEaseOut, animations: {
+            
             var frame = self.frame
             frame.origin.y += frame.size.height
             self.frame = frame
-
+            
         }) { (finished) in
             self.isAnimating = false
         }
@@ -394,7 +394,7 @@ public extension RNNotificationView {
         self.dismissTimer = nil
         
         /// Show animation
-        UIView.animate(withDuration: Notification.animationDuration, delay: 0, options: UIViewAnimationOptions.curveEaseOut, animations: {
+        UIView.animate(withDuration: Notification.animationDuration, delay: 0, options: UIView.AnimationOptions.curveEaseOut, animations: {
             
             var frame = self.frame
             frame.origin.y -= frame.size.height
@@ -403,7 +403,7 @@ public extension RNNotificationView {
         }) { (finished) in
             
             self.removeFromSuperview()
-            UIApplication.shared.delegate?.window??.windowLevel = UIWindowLevelNormal
+            UIApplication.shared.delegate?.window??.windowLevel = UIWindow.Level.normal
             
             if #available(iOS 11.0, *), let style = self.previousStatusBarStyle {
                 UIApplication.shared.setStatusBarStyle(style, animated: true)
@@ -414,7 +414,7 @@ public extension RNNotificationView {
             
         }
     }
-
+    
     
     // MARK: - Helpers
     
@@ -425,7 +425,7 @@ public extension RNNotificationView {
     public static func hide(completion: (() -> ())? = nil) {
         self.sharedNotification.hide(completion: completion)
     }
-
+    
 }
 
 extension UIViewController {
