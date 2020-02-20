@@ -11,7 +11,7 @@ open class RNNotificationView: UIToolbar {
     
     // MARK: - Properties
     
-    open static var sharedNotification = RNNotificationView()
+    public static var sharedNotification = RNNotificationView()
     
     open var titleFont = Notification.titleFont {
         didSet {
